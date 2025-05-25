@@ -34,47 +34,66 @@ export class AppService {
   }
 
   async onApplicationBootstrap(): Promise<void> {
-    await this.seedData();
+    try {
+      await this.seedData();
+    } catch (error) {
+      console.error('Error during app bootstrap:', error);
+    }
   }
 
   private async seedData(): Promise<void> {
-    await this.seedCountries();
-    await this.seedCities();
-    await this.seedSuperAdmin();
+    try {
+      await this.seedCountries();
+      await this.seedCities();
+      await this.seedSuperAdmin();
+    } catch (error) {
+      console.error('Error seeding data:', error);
+    }
   }
 
   private async seedSuperAdmin(): Promise<void> {
-    const Admins = await prisma.admins.findFirst();
-    if (!Admins) {
-      const hashedPassword = await bcrypt.hash(
-        process.env.ADMIN_PASSWORD || '',
-        10,
+    try {
+      const Admins = await prisma.admins.findFirst();
+      if (!Admins) {
+        const hashedPassword = await bcrypt.hash(
+          process.env.ADMIN_PASSWORD || '',
+          10,
+        );
+        await prisma.admins.create({
+          data: {
+            email: process.env.ADMIN_MAIL || '',
+            password: hashedPassword || '',
+          },
+        });
+      }
+    } catch (error) {
+      console.error(
+        'Error seeding super admin:',
+        JSON.stringify(error, null, 2),
       );
-      await prisma.admins.create({
-        data: {
-          email: process.env.ADMIN_MAIL || '',
-          password: hashedPassword || '',
-        },
-      });
     }
   }
 
   private async seedCountries(): Promise<void> {
-    const countries = await prisma.countries.findFirst();
+    try {
+      const countries = await prisma.countries.findFirst();
 
-    if (!countries) {
-      const typedCountriesData = countriesData as CountryData[];
+      if (!countries) {
+        const typedCountriesData = countriesData as CountryData[];
 
-      await Promise.all(
-        typedCountriesData.map(async (country) => {
-          await prisma.countries.create({
-            data: {
-              id: country.id,
-              name: country.governorate_name_en,
-            },
-          });
-        }),
-      );
+        await Promise.all(
+          typedCountriesData.map(async (country) => {
+            await prisma.countries.create({
+              data: {
+                id: country.id,
+                name: country.governorate_name_en,
+              },
+            });
+          }),
+        );
+      }
+    } catch (error) {
+      console.error('Error seeding countries:', JSON.stringify(error, null, 2));
     }
   }
 
