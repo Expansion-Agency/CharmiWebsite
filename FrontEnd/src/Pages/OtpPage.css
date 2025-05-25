@@ -1,0 +1,81 @@
+.codeRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px auto;
+  flex-direction: row !important; /* Ensure the inputs are laid out from left to right */
+}
+/* Prevent the inputs from aligning right in RTL */
+[dir="rtl"] .codeRow {
+  text-align: left !important; /* Prevent text alignment issues in RTL */
+  direction: ltr !important; /* Force direction of text inside input to be LTR */
+}
+.codeRow p {
+  font-size: 50px;
+  color: white;
+}
+.codeRow .otpInput {
+  width: 60px;
+  height: 65px;
+  font-size: 25px;
+  text-align: center;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  gap: 5px;
+  direction: ltr; /* Force left-to-right text direction inside inputs */
+}
+.otpInput:focus {
+  border: 2px solid #161616;
+}
+.navigateto {
+  margin: auto auto;
+}
+.navigateto a {
+  color: white !important;
+}
+
+/* Remove arrows from number inputs */
+.otpInput::-webkit-outer-spin-button,
+.otpInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.otpInput[type="number"] {
+  -moz-appearance: textfield;
+}
+
+@media screen and (max-width: 768px) {
+  .codeRow .otpInput {
+    width: 100%;
+    height: 50px;
+    font-size: 22px;
+    margin: 4px;
+  }
+}
+.navigateto .resendOtpButton {
+  background: none;
+  border: none;
+  color: #e2e4e5; /* Bootstrap blue color */
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+.navigateto .resendOtpButton:hover {
+  color: #f3f6fb; /* Darker blue on hover */
+}
+/* Make it responsive for mobile screens */
+@media screen and (max-width: 480px) {
+  .codeRow {
+    gap: 0px;
+  }
+
+  .codeRow .otpInput {
+    width: 100%;
+    height: 45px;
+    font-size: 18px;
+  }
+}
