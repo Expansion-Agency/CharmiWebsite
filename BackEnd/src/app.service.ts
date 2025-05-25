@@ -79,37 +79,41 @@ export class AppService {
   }
 
   private async seedCities(): Promise<void> {
-    const cities = await prisma.cities.findFirst();
+    try {
+      const cities = await prisma.cities.findFirst();
 
-    if (!cities) {
-      const typedCitiesData = citiesData as CityData[];
+      if (!cities) {
+        const typedCitiesData = citiesData as CityData[];
 
-      await Promise.all(
-        typedCitiesData.map(async (city) => {
-          await prisma.cities.create({
-            data: {
-              id: city.id,
-              name: city.cityName,
-              code: city.cityCode,
-              countryId: 1,
-              Districts: {
-                createMany: {
-                  data: city.districts.map((district) => ({
-                    district_id: district.districtId,
-                    zoneId: district.zoneId,
-                    zoneName: district.zoneName,
-                    zoneOtherName: district.zoneOtherName,
-                    districtName: district.districtName,
-                    districtOtherName: district.districtOtherName,
-                    pickupAvailability: district.pickupAvailability,
-                    dropOffAvailability: district.dropOffAvailability,
-                  })),
+        await Promise.all(
+          typedCitiesData.map(async (city) => {
+            await prisma.cities.create({
+              data: {
+                id: city.id,
+                name: city.cityName,
+                code: city.cityCode,
+                countryId: 1,
+                Districts: {
+                  createMany: {
+                    data: city.districts.map((district) => ({
+                      district_id: district.districtId,
+                      zoneId: district.zoneId,
+                      zoneName: district.zoneName,
+                      zoneOtherName: district.zoneOtherName,
+                      districtName: district.districtName,
+                      districtOtherName: district.districtOtherName,
+                      pickupAvailability: district.pickupAvailability,
+                      dropOffAvailability: district.dropOffAvailability,
+                    })),
+                  },
                 },
               },
-            },
-          });
-        }),
-      );
+            });
+          }),
+        );
+      }
+    } catch (error) {
+      console.error('Error seeding countries:', error);
     }
   }
 }
