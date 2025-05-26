@@ -85,10 +85,10 @@ export class AppService {
           typedCountriesData.map(async (country) => {
             await prisma.countries.create({
               data: {
-                id: country.id,
                 name: country.governorate_name_en,
               },
             });
+            console.log(`Seeded country: ${country.governorate_name_en}`);
           }),
         );
       }
