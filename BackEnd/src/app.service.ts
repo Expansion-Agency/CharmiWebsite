@@ -93,7 +93,8 @@ export class AppService {
         );
       }
     } catch (error) {
-      console.error('Error seeding countries:', JSON.stringify(error, null, 2));
+      console.error('Error seeding countries:', error.message || error);
+      if (error.meta) console.error('Meta:', error.meta);
     }
   }
 
