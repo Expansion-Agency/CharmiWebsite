@@ -35,6 +35,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'https://charmi-web.vercel.app', // production frontend on Vercel
+      'https://charmi-website-xi.vercel.app', // staging frontend on Vercel
       'https://charmi.shop', // root domain if you serve frontend here
       'https://www.charmi.shop',
       'http://localhost:3001', // local dev
