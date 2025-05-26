@@ -124,7 +124,6 @@ export class AppService {
                       districtOtherName: district.districtOtherName,
                       pickupAvailability: district.pickupAvailability,
                       dropOffAvailability: district.dropOffAvailability,
-                      cityId: city.id,
                     })),
                   },
                 },
