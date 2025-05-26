@@ -34,106 +34,82 @@ export class AppService {
   }
 
   async onApplicationBootstrap(): Promise<void> {
-    try {
-      await this.seedData();
-    } catch (error) {
-      console.error('Error during app bootstrap:', error);
-    }
+    await this.seedData();
   }
 
   private async seedData(): Promise<void> {
-    try {
-      await this.seedCountries();
-      await this.seedCities();
-      await this.seedSuperAdmin();
-    } catch (error) {
-      console.error('Error seeding data:', error);
-    }
+    await this.seedCountries();
+    await this.seedCities();
+    await this.seedSuperAdmin();
   }
 
   private async seedSuperAdmin(): Promise<void> {
-    try {
-      const Admins = await prisma.admins.findFirst();
-      if (!Admins) {
-        const hashedPassword = await bcrypt.hash(
-          process.env.ADMIN_PASSWORD || '',
-          10,
-        );
-        await prisma.admins.create({
-          data: {
-            email: process.env.ADMIN_MAIL || '',
-            password: hashedPassword || '',
-          },
-        });
-      }
-    } catch (error) {
-      console.error(
-        'Error seeding super admin:',
-        JSON.stringify(error, null, 2),
+    const Admins = await prisma.admins.findFirst();
+    if (!Admins) {
+      const hashedPassword = await bcrypt.hash(
+        process.env.ADMIN_PASSWORD || '',
+        10,
       );
+      await prisma.admins.create({
+        data: {
+          email: process.env.ADMIN_MAIL || '',
+          password: hashedPassword || '',
+        },
+      });
     }
   }
 
   private async seedCountries(): Promise<void> {
-    try {
-      const countries = await prisma.countries.findFirst();
+    const countries = await prisma.countries.findFirst();
 
-      if (!countries) {
-        const typedCountriesData = countriesData as CountryData[];
+    if (!countries) {
+      const typedCountriesData = countriesData as CountryData[];
 
-        await Promise.all(
-          typedCountriesData.map(async (country) => {
-            await prisma.countries.create({
-              data: {
-                name: country.governorate_name_en,
-              },
-            });
-            console.log(`Seeded country: ${country.governorate_name_en}`);
-          }),
-        );
-      }
-    } catch (error) {
-      console.error('Error seeding countries:', error.message || error);
-      if (error.meta) console.error('Meta:', error.meta);
+      await Promise.all(
+        typedCountriesData.map(async (country) => {
+          await prisma.countries.create({
+            data: {
+              id: country.id,
+              name: country.governorate_name_en,
+            },
+          });
+        }),
+      );
     }
   }
 
   private async seedCities(): Promise<void> {
-    try {
-      const cities = await prisma.cities.findFirst();
+    const cities = await prisma.cities.findFirst();
 
-      if (!cities) {
-        const typedCitiesData = citiesData as CityData[];
+    if (!cities) {
+      const typedCitiesData = citiesData as CityData[];
 
-        await Promise.all(
-          typedCitiesData.map(async (city) => {
-            await prisma.cities.create({
-              data: {
-                id: city.id,
-                name: city.cityName,
-                code: city.cityCode,
-                countryId: 1,
-                Districts: {
-                  createMany: {
-                    data: city.districts.map((district) => ({
-                      district_id: district.districtId,
-                      zoneId: district.zoneId,
-                      zoneName: district.zoneName,
-                      zoneOtherName: district.zoneOtherName,
-                      districtName: district.districtName,
-                      districtOtherName: district.districtOtherName,
-                      pickupAvailability: district.pickupAvailability,
-                      dropOffAvailability: district.dropOffAvailability,
-                    })),
-                  },
+      await Promise.all(
+        typedCitiesData.map(async (city) => {
+          await prisma.cities.create({
+            data: {
+              id: city.id,
+              name: city.cityName,
+              code: city.cityCode,
+              countryId: 1,
+              Districts: {
+                createMany: {
+                  data: city.districts.map((district) => ({
+                    district_id: district.districtId,
+                    zoneId: district.zoneId,
+                    zoneName: district.zoneName,
+                    zoneOtherName: district.zoneOtherName,
+                    districtName: district.districtName,
+                    districtOtherName: district.districtOtherName,
+                    pickupAvailability: district.pickupAvailability,
+                    dropOffAvailability: district.dropOffAvailability,
+                  })),
                 },
               },
-            });
-          }),
-        );
-      }
-    } catch (error) {
-      console.error('Error seeding countries:', error);
+            },
+          });
+        }),
+      );
     }
   }
 }
