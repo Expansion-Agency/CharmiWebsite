@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "../TranslationContext";
+import { usePriceVisibility } from "../PriceVisibilityContext";
 
 export default function Cart({
   toggleCartVisibility,
@@ -13,6 +14,7 @@ export default function Cart({
   fetchUserCart,
   totalQuantity,
 }) {
+  const { hidePrices } = usePriceVisibility();
   const navigate = useNavigate();
   const { selectedCurrency, convertAmount } = useCurrency();
   const { translations, language } = useTranslation();
@@ -131,11 +133,13 @@ export default function Cart({
             <span>
               {translations.totalItems}: {totalQuantity}
             </span>
-            <span>
-              {translations.totalPrice}:{" "}
-              {selectedCurrency === "egp" ? `${translations.egp}` : "$"}
-              {Math.round(totalPrice)} {/* Display with 2 decimals */}
-            </span>
+            {hidePrices ? null : (
+              <span>
+                {translations.totalPrice}:{" "}
+                {selectedCurrency === "egp" ? `${translations.egp}` : "$"}
+                {Math.round(totalPrice)} {/* Display with 2 decimals */}
+              </span>
+            )}
           </div>
         </div>
         <div className="cart-items">
@@ -167,13 +171,15 @@ export default function Cart({
                       ? productInfo?.nameAr
                       : productInfo?.nameEn}
                   </div>
-                  <div className="total-price">
-                    {selectedCurrency === "egp" ? `${translations.egp}` : "$"}{" "}
-                    {productInfo.discount
-                      ? Math.round(discountedPrice * (item.quantity || 0)) // Total after discount
-                      : Math.round(convertedPrice * (item.quantity || 0))}
-                    {/* Total without discount */}
-                  </div>
+                  {hidePrices ? null : (
+                    <div className="total-price">
+                      {selectedCurrency === "egp" ? `${translations.egp}` : "$"}{" "}
+                      {productInfo.discount
+                        ? Math.round(discountedPrice * (item.quantity || 0)) // Total after discount
+                        : Math.round(convertedPrice * (item.quantity || 0))}
+                      {/* Total without discount */}
+                    </div>
+                  )}
                   <div className="quantity">
                     <button
                       onClick={() =>

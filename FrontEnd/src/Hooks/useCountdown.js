@@ -7,7 +7,7 @@ export const useCountdown = (endDate) => {
     const calculateTimeLeft = () => {
       const difference = new Date(endDate) - new Date();
       if (difference <= 0) {
-        setTimeLeft("Expired");
+        setTimeLeft("");
         return;
       }
 

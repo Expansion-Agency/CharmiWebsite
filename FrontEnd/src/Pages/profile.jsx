@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import useOrders from "../Hooks/useOrders";
 import useProducts from "../Hooks/useProducts";
 import { useCurrency } from "../CurrencyContext";
+import { usePriceVisibility } from "../PriceVisibilityContext";
 
 function Profile({
   toggleCartVisibility,
@@ -17,6 +18,7 @@ function Profile({
   showProducts,
   totalQuantity,
 }) {
+  const { hidePrices } = usePriceVisibility();
   const API_BASE_URL = process.env.REACT_APP_API_URL;
   const { translations, language } = useTranslation();
   const [visibleDiv, setVisibleDiv] = useState("first"); // "first" or "second"
@@ -340,13 +342,17 @@ function Profile({
                       {translations.orderno} #{order.id}
                     </h3>
                   </div>
-                  <div className="orderprice">
-                    <p className="text-muted">
-                      {translations.totalPrice}:{" "}
-                      {selectedCurrency === "egp" ? `${translations.egp}` : "$"}{" "}
-                      {Math.round(totalOrderPrice)}
-                    </p>
-                  </div>
+                  {hidePrices ? null : (
+                    <div className="orderprice">
+                      <p className="text-muted">
+                        {translations.totalPrice}:{" "}
+                        {selectedCurrency === "egp"
+                          ? `${translations.egp}`
+                          : "$"}{" "}
+                        {Math.round(totalOrderPrice)}
+                      </p>
+                    </div>
+                  )}
                   <div className="no">
                     <p className="text-muted">
                       {translations.timeword}:{" "}
@@ -390,21 +396,23 @@ function Profile({
                 {translations.orderno} #{selectedOrder.id}{" "}
                 {translations.orderdetail}
               </h2>
-              <p>
-                <strong>{translations.totalPrice}:</strong>{" "}
-                {selectedCurrency === "egp" ? `${translations.egp}` : "$"}
-                {(
-                  selectedOrder?.orderItems?.reduce(
-                    (sum, item) =>
-                      sum +
-                      ((selectedCurrency === "egp"
-                        ? item.priceEgp
-                        : item.priceUsd) || 0) *
-                        (item.quantity || 0),
-                    0
-                  ) || 0
-                ).toFixed(2)}
-              </p>
+              {hidePrices ? null : (
+                <p>
+                  <strong>{translations.totalPrice}:</strong>{" "}
+                  {selectedCurrency === "egp" ? `${translations.egp}` : "$"}
+                  {(
+                    selectedOrder?.orderItems?.reduce(
+                      (sum, item) =>
+                        sum +
+                        ((selectedCurrency === "egp"
+                          ? item.priceEgp
+                          : item.priceUsd) || 0) *
+                          (item.quantity || 0),
+                      0
+                    ) || 0
+                  ).toFixed(2)}
+                </p>
+              )}
               <p>
                 <strong>{translations.orderdate}:</strong>{" "}
                 {new Date(selectedOrder.createdAt).toLocaleString()}
@@ -434,12 +442,14 @@ function Profile({
                         <strong>{translations.quantity}:</strong>{" "}
                         {item.quantity}
                       </p>
-                      <p>
-                        <strong>{translations.price}:</strong>{" "}
-                        {selectedCurrency === "egp"
-                          ? `${translations.egp} ${item.priceEgp}`
-                          : `$ ${item.priceUsd}`}
-                      </p>
+                      {hidePrices ? null : (
+                        <p>
+                          <strong>{translations.price}:</strong>{" "}
+                          {selectedCurrency === "egp"
+                            ? `${translations.egp} ${item.priceEgp}`
+                            : `$ ${item.priceUsd}`}
+                        </p>
+                      )}
                     </div>
                   </div>
                 );

@@ -3,7 +3,9 @@ import axios from "axios";
 
 import { useTranslation } from "../TranslationContext";
 import { useCurrency } from "../CurrencyContext";
+import { usePriceVisibility } from "../PriceVisibilityContext";
 function DashHome() {
+  const { hidePrices, togglePrices } = usePriceVisibility();
   const API_BASE_URL = process.env.REACT_APP_API_URL;
   const { translations } = useTranslation();
   const [orders, setOrders] = useState([]);
@@ -152,7 +154,14 @@ function DashHome() {
         <div className="main">
           <div className="main-title">
             <h3 className="dashtitle p-2">{translations.dashtitle}</h3>
+            <button
+              className="d-flex justify-content-center addprod"
+              onClick={togglePrices}
+            >
+              {hidePrices ? "Show Prices" : "Hide Prices"}
+            </button>
           </div>
+
           <div className="main-cards">
             <div className="card">
               <div class="sales">

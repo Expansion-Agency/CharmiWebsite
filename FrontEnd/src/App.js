@@ -42,6 +42,7 @@ import OrderSuccess from "./Pages/OrderSuccess";
 import UserAddresses from "./Pages/userAddresses";
 import Discount from "./Dashboard/Discount";
 import AdminRoute from "./AdminRoute";
+import { PriceVisibilityProvider } from "./PriceVisibilityContext";
 
 function App() {
   const API_BASE_URL = process.env.REACT_APP_API_URL;
@@ -135,159 +136,164 @@ function App() {
   }, []);
 
   return (
-    <CurrencyProvider>
-      <TranslationProvider>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Home
-                showProducts={showProducts}
-                toggleCartVisibility={toggleCartVisibility}
-                toggleProductsVisibility={toggleProductsVisibility}
-                cart={cart}
-                products={products}
-                addToCart={addToCart}
-                totalQuantity={totalQuantity}
-              />
-            }
-          />
-          <Route
-            path="/about"
-            element={
-              <About
-                showProducts={showProducts}
-                toggleCartVisibility={toggleCartVisibility}
-                toggleProductsVisibility={toggleProductsVisibility}
-                cart={cart}
-                totalQuantity={totalQuantity}
-              />
-            }
-          />
-          <Route
-            path="/contact"
-            element={
-              <Contact
-                showProducts={showProducts}
-                toggleCartVisibility={toggleCartVisibility}
-                toggleProductsVisibility={toggleProductsVisibility}
-                cart={cart}
-                totalQuantity={totalQuantity}
-              />
-            }
-          />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route
-            path="/categorypage"
-            element={
-              <CategoryPage
-                showProducts={showProducts}
-                products={products}
-                cart={cart}
-                toggleCartVisibility={toggleCartVisibility}
-                toggleProductsVisibility={toggleProductsVisibility}
-                addToCart={addToCart}
-                totalQuantity={totalQuantity}
-              />
-            }
-          />
-          <Route
-            path="/product/:productId"
-            element={
-              <ProductView
-                cart={cart}
-                toggleCartVisibility={toggleCartVisibility}
-                toggleProductsVisibility={toggleProductsVisibility}
-                showProducts={showProducts}
-                addToCart={addToCart}
-                totalQuantity={totalQuantity}
-              />
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <Profile
-                showProducts={showProducts}
-                toggleCartVisibility={toggleCartVisibility}
-                toggleProductsVisibility={toggleProductsVisibility}
-                cart={cart}
-                products={products}
-                totalQuantity={totalQuantity}
-              />
-            }
-          />
-          <Route path="/admin-login" element={<Signin userType="ADMIN" />} />
-
-          <Route element={<AdminRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/dashboard/products" element={<Dshproducts />} />
-            <Route path="/dashboard/users" element={<DshUsers />} />
+    <PriceVisibilityProvider>
+      <CurrencyProvider>
+        <TranslationProvider>
+          <Routes>
             <Route
-              path="/dashboard/orders"
-              element={<DshOrders cart={cart} />}
+              path="/"
+              element={
+                <Home
+                  showProducts={showProducts}
+                  toggleCartVisibility={toggleCartVisibility}
+                  toggleProductsVisibility={toggleProductsVisibility}
+                  cart={cart}
+                  products={products}
+                  addToCart={addToCart}
+                  totalQuantity={totalQuantity}
+                />
+              }
             />
-            <Route path="/dashboard/discount" element={<Discount />} />
-            <Route path="/dashboard/cities" element={<DshCities />} />
-            <Route path="/dashboard/countries" element={<DshCountries />} />
-            <Route path="/dashboard/categories" element={<DshCategories />} />
-            <Route path="/dashboard/admins" element={<AdminPage />} />
-            <Route path="/dashboard/shippingfees" element={<ShippingFees />} />
             <Route
-              path="/dashboard/products/productdetails/:productId"
-              element={<ProductDetails />}
+              path="/about"
+              element={
+                <About
+                  showProducts={showProducts}
+                  toggleCartVisibility={toggleCartVisibility}
+                  toggleProductsVisibility={toggleProductsVisibility}
+                  cart={cart}
+                  totalQuantity={totalQuantity}
+                />
+              }
             />
-          </Route>
+            <Route
+              path="/contact"
+              element={
+                <Contact
+                  showProducts={showProducts}
+                  toggleCartVisibility={toggleCartVisibility}
+                  toggleProductsVisibility={toggleProductsVisibility}
+                  cart={cart}
+                  totalQuantity={totalQuantity}
+                />
+              }
+            />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route
+              path="/categorypage"
+              element={
+                <CategoryPage
+                  showProducts={showProducts}
+                  products={products}
+                  cart={cart}
+                  toggleCartVisibility={toggleCartVisibility}
+                  toggleProductsVisibility={toggleProductsVisibility}
+                  addToCart={addToCart}
+                  totalQuantity={totalQuantity}
+                />
+              }
+            />
+            <Route
+              path="/product/:productId"
+              element={
+                <ProductView
+                  cart={cart}
+                  toggleCartVisibility={toggleCartVisibility}
+                  toggleProductsVisibility={toggleProductsVisibility}
+                  showProducts={showProducts}
+                  addToCart={addToCart}
+                  totalQuantity={totalQuantity}
+                />
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <Profile
+                  showProducts={showProducts}
+                  toggleCartVisibility={toggleCartVisibility}
+                  toggleProductsVisibility={toggleProductsVisibility}
+                  cart={cart}
+                  products={products}
+                  totalQuantity={totalQuantity}
+                />
+              }
+            />
+            <Route path="/admin-login" element={<Signin userType="ADMIN" />} />
 
-          <Route path="/register" element={<NoAccount />} />
-          <Route path="/user-login" element={<Signin userType="USER" />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/otp" element={<OtpPage />} />
-          <Route path="/email-verification" element={<EmailInput />} />
-          <Route path="/forgot-password" element={<EmailInput />} />
-          <Route path="/reset-password" element={<ResetPass />} />
-          <Route
-            path="/profile/addresses"
-            element={
-              <UserAddresses
-                showProducts={showProducts}
-                toggleCartVisibility={toggleCartVisibility}
-                toggleProductsVisibility={toggleProductsVisibility}
-                cart={cart}
-                products={products}
-                totalQuantity={totalQuantity}
+            <Route element={<AdminRoute />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard/products" element={<Dshproducts />} />
+              <Route path="/dashboard/users" element={<DshUsers />} />
+              <Route
+                path="/dashboard/orders"
+                element={<DshOrders cart={cart} />}
               />
-            }
-          />
-
-          <Route path="/order-success" element={<OrderSuccess />} />
-          <Route
-            path="/productlist"
-            element={
-              <ProductList
-                products={products}
-                cart={cart}
-                addToCart={addToCart} // Ensure addToCart is passed correctly
+              <Route path="/dashboard/discount" element={<Discount />} />
+              <Route path="/dashboard/cities" element={<DshCities />} />
+              <Route path="/dashboard/countries" element={<DshCountries />} />
+              <Route path="/dashboard/categories" element={<DshCategories />} />
+              <Route path="/dashboard/admins" element={<AdminPage />} />
+              <Route
+                path="/dashboard/shippingfees"
+                element={<ShippingFees />}
               />
-            }
-          />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+              <Route
+                path="/dashboard/products/productdetails/:productId"
+                element={<ProductDetails />}
+              />
+            </Route>
 
-        {/* Conditionally render Cart only when products are loaded */}
-        {!isLoading && (
-          <Cart
-            cart={cart}
-            toggleCartVisibility={toggleCartVisibility}
-            isCartVisible={isCartVisible}
-            products={products}
-            fetchUserCart={fetchUserCart}
-            totalQuantity={totalQuantity}
-          />
-        )}
-        <productList addToCart={addToCart} fetchUserCart={fetchUserCart} />
-      </TranslationProvider>
-    </CurrencyProvider>
+            <Route path="/register" element={<NoAccount />} />
+            <Route path="/user-login" element={<Signin userType="USER" />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/otp" element={<OtpPage />} />
+            <Route path="/email-verification" element={<EmailInput />} />
+            <Route path="/forgot-password" element={<EmailInput />} />
+            <Route path="/reset-password" element={<ResetPass />} />
+            <Route
+              path="/profile/addresses"
+              element={
+                <UserAddresses
+                  showProducts={showProducts}
+                  toggleCartVisibility={toggleCartVisibility}
+                  toggleProductsVisibility={toggleProductsVisibility}
+                  cart={cart}
+                  products={products}
+                  totalQuantity={totalQuantity}
+                />
+              }
+            />
+
+            <Route path="/order-success" element={<OrderSuccess />} />
+            <Route
+              path="/productlist"
+              element={
+                <ProductList
+                  products={products}
+                  cart={cart}
+                  addToCart={addToCart} // Ensure addToCart is passed correctly
+                />
+              }
+            />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+
+          {/* Conditionally render Cart only when products are loaded */}
+          {!isLoading && (
+            <Cart
+              cart={cart}
+              toggleCartVisibility={toggleCartVisibility}
+              isCartVisible={isCartVisible}
+              products={products}
+              fetchUserCart={fetchUserCart}
+              totalQuantity={totalQuantity}
+            />
+          )}
+          <productList addToCart={addToCart} fetchUserCart={fetchUserCart} />
+        </TranslationProvider>
+      </CurrencyProvider>
+    </PriceVisibilityProvider>
   );
 }
 export default App;

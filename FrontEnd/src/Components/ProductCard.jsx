@@ -2,6 +2,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useCountdown } from "../Hooks/useCountdown";
+import { usePriceVisibility } from "../PriceVisibilityContext";
 
 function ProductCard({
   product,
@@ -12,6 +13,7 @@ function ProductCard({
   hoveredProduct,
   setHoveredProduct,
 }) {
+  const { hidePrices } = usePriceVisibility();
   const navigate = useNavigate();
   const discount = product.discount;
   const timeLeft = useCountdown(discount?.endDate);
@@ -42,7 +44,9 @@ function ProductCard({
       <div className="content">
         <h3>{language === "ar" ? product.nameAr : product.nameEn}</h3>
         <p className="text-base">
-          {discount ? (
+          {hidePrices ? (
+            <span className="text-muted"></span>
+          ) : discount && timeLeft ? (
             <>
               <span className="text-muted text-decoration-line-through d-block mr-2">
                 {formatPrice(

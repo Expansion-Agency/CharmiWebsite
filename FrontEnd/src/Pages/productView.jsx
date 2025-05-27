@@ -9,6 +9,7 @@ import { useCurrency } from "../CurrencyContext";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useCountdown } from "../Hooks/useCountdown";
+import { usePriceVisibility } from "../PriceVisibilityContext";
 /* import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Environment, useGLTF } from "@react-three/drei"; */
 /* const ProductModel = ({ modelPath }) => {
@@ -30,6 +31,7 @@ function ProductView({
   addToCart,
   totalQuantity,
 }) {
+  const { hidePrices } = usePriceVisibility();
   const API_BASE_URL = process.env.REACT_APP_API_URL;
   const { translations, language } = useTranslation();
   const location = useLocation();
@@ -86,7 +88,7 @@ function ProductView({
                 : product.descriptionEn}
             </p>
             <p className="text-base">
-              {product.discount ? (
+              {hidePrices ? null : product.discount && timeLeft ? (
                 <>
                   <span className="text-muted text-decoration-line-through d-block mr-2">
                     {selectedCurrency === "egp"
@@ -299,9 +301,9 @@ function ProductView({
       }
     }
   }, [product]); */
-
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <p>Loading product...</p>;
   if (!product) return <p>Product not found</p>;
+  console.log("Product object:", product);
 
   return (
     <>
@@ -353,7 +355,7 @@ function ProductView({
             {language === "ar" ? product.descriptionAr : product.descriptionEn}
           </p>
           <p className="text-base">
-            {product.discount ? (
+            {hidePrices ? null : product.discount && timeLeft ? (
               <>
                 <span className="text-muted text-decoration-line-through d-block mr-2">
                   {selectedCurrency === "egp"
@@ -390,6 +392,9 @@ function ProductView({
           </div>
         </div>
       </div>
+      <p className="text-center text-muted mt-3" style={{ direction: "ltr" }}>
+        {product.viewCount} People viewed this product
+      </p>
       <hr className="hr" />
       {/* Related Products Section */}
       <div className="related">

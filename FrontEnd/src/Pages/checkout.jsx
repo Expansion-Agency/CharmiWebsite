@@ -4,8 +4,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useTranslation } from "../TranslationContext";
 import { useCurrency } from "../CurrencyContext";
+import { usePriceVisibility } from "../PriceVisibilityContext";
 
 export default function Checkout() {
+  const { hidePrices } = usePriceVisibility();
   const API_BASE_URL = process.env.REACT_APP_API_URL;
   const { translations, language } = useTranslation();
   const location = useLocation();
@@ -322,7 +324,7 @@ export default function Checkout() {
                   </p>
                   <span className="price">
                     x {item.quantity}
-                    {item.productInfo.discount ? (
+                    {hidePrices ? null : item.productInfo.discount ? (
                       <>
                         <span
                           className="d-block"
