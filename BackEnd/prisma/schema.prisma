@@ -135,6 +135,7 @@ model Products {
   discountId  Int?
   productImages productImages[]
   productModel  productModel?   @relation("ProductsModel")
+  viewCount Int    @default(0)
 
   @@index([categoryId], map: "Products_categoryId_fkey")
 }

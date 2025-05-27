@@ -19,6 +19,15 @@ export class ProductsService {
   }
 
   async findOne(id: number) {
+    await prisma.products.update({
+      where: { id },
+      data: {
+        viewCount: {
+          increment: 1,
+        },
+      },
+    });
+
     const product = await prisma.products.findUnique({
       include: {
         discount: true,
