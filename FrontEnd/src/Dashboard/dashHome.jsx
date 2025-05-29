@@ -158,7 +158,7 @@ function DashHome() {
               className="d-flex justify-content-center addprod"
               onClick={togglePrices}
             >
-              {hidePrices ? "Show Prices" : "Hide Prices"}
+              {hidePrices ? translations.showPrices : translations.hidePrices}
             </button>
           </div>
 

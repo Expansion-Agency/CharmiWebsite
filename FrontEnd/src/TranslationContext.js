@@ -57,6 +57,7 @@ const translations = {
     addtocart: "Add to cart",
     relatedname: "Related Products",
     recommendedname: "Recommended for you",
+    viewCount: "People viewed this product",
     //profile
     welcome: "Hey, Welcome Back",
     personalinfo: "Personal information",
@@ -78,6 +79,8 @@ const translations = {
     adminname: "Admins",
     //dashboard
     dashtitle: "Dashboard",
+    hidePrices: "Hide Prices",
+    showPrices: "Show Prices",
     totalsales: "Total Sales",
     time: "Last 24 hours",
     timeword: "Time",
@@ -305,6 +308,7 @@ const translations = {
     addtocart: "أضف إلى السلة",
     relatedname: "المنتجات ذات الصلة",
     recommendedname: "موصى به لك",
+    viewCount: "شاهد هذا المنتج",
     //profile
     welcome: "مرحباً بك مرة أخرى",
     personalinfo: "المعلومات الشخصية",
@@ -326,6 +330,8 @@ const translations = {
     adminname: "المشرفين",
     //dashboard
     dashtitle: "لوحة القيادة",
+    hidePrices: "إخفاء الأسعار",
+    showPrices: "إظهار الأسعار",
     totalsales: "إجمالي المبيعات",
     time: "آخر 24 ساعة",
     timeword: "الوقت",

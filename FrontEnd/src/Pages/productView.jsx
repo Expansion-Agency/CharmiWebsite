@@ -393,7 +393,7 @@ function ProductView({
         </div>
       </div>
       <p className="text-center text-muted mt-3" style={{ direction: "ltr" }}>
-        {product.viewCount} People viewed this product
+        {product.viewCount} {translations.viewCount}
       </p>
       <hr className="hr" />
       {/* Related Products Section */}
