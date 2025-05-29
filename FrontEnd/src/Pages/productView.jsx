@@ -33,7 +33,7 @@ function ProductView({
 }) {
   const { hidePrices } = usePriceVisibility();
   const API_BASE_URL = process.env.REACT_APP_API_URL;
-  const { translations, language } = useTranslation();
+  const { translations, language, direction } = useTranslation();
   const location = useLocation();
   const { selectedCurrency, convertAmount } = useCurrency();
   const [productImages, setProductImages] = useState([]);
@@ -392,7 +392,7 @@ function ProductView({
           </div>
         </div>
       </div>
-      <p className="text-center text-muted mt-3" style={{ direction: "ltr" }}>
+      <p className="text-center text-muted mt-3" style={{ direction }}>
         {product.viewCount} {translations.viewCount}
       </p>
       <hr className="hr" />
