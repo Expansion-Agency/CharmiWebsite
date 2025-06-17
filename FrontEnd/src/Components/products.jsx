@@ -21,6 +21,9 @@ export default function Products({ showProducts }) {
       });
   }, [language]);
 
+  categories.forEach((category) => {
+    console.log("image url", "https://" + category.imagePath);
+  });
   return (
     <>
       {showProducts && (

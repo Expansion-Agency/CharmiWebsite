@@ -58,15 +58,14 @@ function DshCategories() {
     try {
       const token = localStorage.getItem("token"); // Retrieve token if stored in localStorage
       const formData = new FormData();
-      formData.append(
-        "nameEn",
-        newCategory.nameEn,
-        "nameAr",
-        newCategory.nameAr
-      );
+      formData.append("nameEn", newCategory.nameEn);
+      formData.append("nameAr", newCategory.nameAr);
+
       if (newCategory.imageFile) {
         formData.append("imageFile", newCategory.imageFile);
+        console.log(typeof newCategory.imageFile, newCategory.imageFile);
       }
+
       const response = await axios.post(`${API_BASE_URL}/category`, formData, {
         headers: {
           Authorization: `Bearer ${token}`, // Include authentication token
