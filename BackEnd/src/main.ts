@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-/* import helmet from 'helmet'; // ← extra security headers
- */ import * as express from 'express';
+import helmet from 'helmet'; // ← extra security headers
+import * as express from 'express';
 import { join } from 'path';
 
 async function bootstrap() {
@@ -12,11 +12,24 @@ async function bootstrap() {
   });
   const port = process.env.PORT || 3000;
 
-  /*   // security
-  app.use(helmet()); */
+  app.enableCors({
+    origin: [
+      'https://charmi-web.vercel.app', // production frontend on Vercel
+      'https://charmi-website-xi.vercel.app', // staging frontend on Vercel
+      'https://charmi.shop', // root domain if you serve frontend here
+      'https://www.charmi.shop',
+      'http://localhost:3001', // local dev
+    ],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: ['Content-Type', 'Authorization', 'userType'],
+    credentials: true,
+  });
+  // security
+  app.use(helmet());
 
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json({ limit: '10mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
   const modelDir =
     process.env.MODEL_STORAGE_PATH ||
     join(__dirname, '..', 'public', 'products');
@@ -31,19 +44,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
-
-  app.enableCors({
-    origin: [
-      'https://charmi-web.vercel.app', // production frontend on Vercel
-      'https://charmi-website-xi.vercel.app', // staging frontend on Vercel
-      'https://charmi.shop', // root domain if you serve frontend here
-      'https://www.charmi.shop',
-      'http://localhost:3001', // local dev
-    ],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    allowedHeaders: ['Content-Type', 'Authorization','userType'],
-    credentials: true,
-  });
 
   app.enableShutdownHooks();
 
