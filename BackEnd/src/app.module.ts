@@ -23,6 +23,11 @@ import { DistrictModule } from './district/district.module';
 import { Product3DModule } from './product-threeD/product-threeD.module';
 import { DiscountModule } from './discount/discount.module';
 import { SiteSettingsModule } from './siteSettings/site-settings.module';
+import { PaymentModule } from './payment/payment.module';
+import { PaymentService } from './payment/payment.service';
+import { PaymentController } from './payment/payment.controller';
+
+
 
 @Module({
   imports: [
@@ -47,8 +52,9 @@ import { SiteSettingsModule } from './siteSettings/site-settings.module';
     DistrictModule,
     DiscountModule,
     SiteSettingsModule,
+    PaymentModule,
   ],
-  controllers: [AppController, CartController, ProductsController],
-  providers: [AppService, CartService, ProductsService],
+  controllers: [AppController, CartController, ProductsController,PaymentController],
+  providers: [AppService, CartService, ProductsService,PaymentService],
 })
 export class AppModule {}
