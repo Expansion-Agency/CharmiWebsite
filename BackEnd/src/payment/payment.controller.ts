@@ -8,9 +8,13 @@ export class PaymentController {
   @Post('initiate')
   async initiatePayment(@Body() body: any) {
     const { amount, billing } = body;
-    const token = await this.paymentService.createOrder(amount, billing);
+    const paymentToken = await this.paymentService.createOrder(amount, billing);
+    const iframeId = this.paymentService.getIframeId();
+
     return {
-      paymentPageUrl: `https://accept.paymob.com/api/acceptance/iframes/${this.paymentService.getIframeId()}?payment_token=${token}`,
+      iframeId,
+      paymentToken,
+      paymentPageUrl: `https://accept.paymob.com/api/acceptance/iframes/${iframeId}?payment_token=${paymentToken}`, // optional
     };
   }
 }
