@@ -24,14 +24,13 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization', 'userType'],
     credentials: true,
   });
-  app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
   // security
   app.use(helmet());
 
-  app.use(express.json({ limit: '10mb' }));
-  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+  app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+
 
   const modelDir =
     process.env.MODEL_STORAGE_PATH ||
