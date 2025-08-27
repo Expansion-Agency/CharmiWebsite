@@ -24,6 +24,9 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization', 'userType'],
     credentials: true,
   });
+  app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+
   // security
   app.use(helmet());
 
