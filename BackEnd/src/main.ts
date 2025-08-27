@@ -10,7 +10,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'warn', 'log', 'debug', 'verbose'],
   });
-  const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 3001;
 
   app.enableCors({
     origin: [
@@ -19,6 +19,8 @@ async function bootstrap() {
       'https://charmi.shop', // root domain if you serve frontend here
       'https://www.charmi.shop',
       'http://localhost:3001', // local dev
+      'http://localhost:3003', // local dev
+      'https://api.charmi.shop',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: ['Content-Type', 'Authorization', 'userType'],
@@ -27,8 +29,8 @@ async function bootstrap() {
   // security
   app.use(helmet());
 
-  app.use(express.json({ limit: '10mb' }));
-  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+  app.use(express.json({ limit: '50mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
   const modelDir =
     process.env.MODEL_STORAGE_PATH ||
@@ -51,6 +53,6 @@ async function bootstrap() {
 }
 bootstrap()
   .then(() =>
-    console.log(`Application is running on: http://localhost:${3000}`),
+    console.log(`Application is running on: http://localhost:${3001}`),
   )
   .catch((error) => console.error('Error during application startup:', error));
