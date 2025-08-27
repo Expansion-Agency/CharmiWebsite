@@ -1,4 +1,3 @@
-import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -23,12 +22,20 @@ import { DistrictModule } from './district/district.module';
 import { Product3DModule } from './product-threeD/product-threeD.module';
 import { DiscountModule } from './discount/discount.module';
 import { SiteSettingsModule } from './siteSettings/site-settings.module';
+import { PaymentModule } from './payment/payment.module';
+import { PaymentService } from './payment/payment.service';
+import { PaymentController } from './payment/payment.controller';
+import { Module, OnModuleInit } from '@nestjs/common';
+import { HttpService, HttpModule } from '@nestjs/axios';
+
+
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    HttpModule, // ✅ <<== THIS LINE is what was missing
     AuthModule,
     UsersModule,
     CategoryModule,
@@ -42,13 +49,23 @@ import { SiteSettingsModule } from './siteSettings/site-settings.module';
     CountryModule,
     ProductsModule,
     AdminsModule,
-    AdminsModule,
     ShippingFeesModule,
     DistrictModule,
     DiscountModule,
     SiteSettingsModule,
+    PaymentModule,
   ],
-  controllers: [AppController, CartController, ProductsController],
-  providers: [AppService, CartService, ProductsService],
+  controllers: [
+    AppController,
+    CartController,
+    ProductsController,
+    PaymentController,
+  ],
+  providers: [
+    AppService,
+    CartService,
+    ProductsService,
+    PaymentService,
+  ],
 })
 export class AppModule {}
