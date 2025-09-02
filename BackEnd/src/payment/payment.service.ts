@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
@@ -9,6 +13,7 @@ export class PaymentService {
   private readonly apiKey: string;
   private readonly integrationId: string;
   private readonly iframeId: string;
+  private readonly logger = new Logger(PaymentService.name);
 
   constructor(
     private readonly config: ConfigService,
@@ -25,54 +30,70 @@ export class PaymentService {
 
   async createOrder(amount: number, billingData: any): Promise<string> {
     try {
+      this.logger.log(`Creating payment order for amount: ${amount}`);
+
       const authToken = await this.authenticate();
+      this.logger.log(`✅ Got Auth Token: ${authToken.substring(0, 10)}...`);
+
       const orderId = await this.createPaymobOrder(authToken, amount);
-      const paymentToken = await this.generatePaymentKey(authToken, amount, billingData, orderId);
+      this.logger.log(`✅ Paymob Order Created: ID = ${orderId}`);
+
+      const paymentToken = await this.generatePaymentKey(
+        authToken,
+        amount,
+        billingData,
+        orderId,
+      );
+      this.logger.log(
+        `✅ Payment Key Generated: ${paymentToken.substring(0, 10)}...`,
+      );
+
       return paymentToken;
     } catch (error) {
-      console.error('Payment creation failed:', error);
+      this.logger.error(
+        '❌ Payment creation failed',
+        error?.response?.data || error.message,
+      );
       throw new InternalServerErrorException('Failed to initiate payment');
     }
   }
 
   private async authenticate(): Promise<string> {
+    this.logger.log('🔑 Requesting Paymob Auth Token...');
     const { data }: AxiosResponse<any> = await firstValueFrom(
-      this.http.post(
-        'https://accept.paymob.com/api/auth/tokens',
-        { api_key: this.apiKey },
-        { timeout: 10000 }, // Optional timeout
-      ),
+      this.http.post('https://accept.paymob.com/api/auth/tokens', {
+        api_key: this.apiKey,
+      }),
     );
     return data.token;
   }
 
-  private async createPaymobOrder(token: string, amount: number): Promise<number> {
+  private async createPaymobOrder(
+    token: string,
+    amount: number,
+  ): Promise<number> {
+    this.logger.log(`📦 Creating Paymob Order with amount: ${amount}`);
     const { data }: AxiosResponse<any> = await firstValueFrom(
-      this.http.post(
-        'https://accept.paymob.com/api/ecommerce/orders',
-        {
-          auth_token: token,
-          delivery_needed: false,
-          amount_cents: amount,
-          currency: 'EGP',
-          items: [],
-        },
-        { timeout: 10000 }, // Optional timeout
-      ),
+      this.http.post('https://accept.paymob.com/api/ecommerce/orders', {
+        auth_token: token,
+        delivery_needed: false,
+        amount_cents: amount,
+        currency: 'EGP',
+        items: [],
+      }),
     );
     return data.id;
   }
 
   private async generatePaymentKey(
-  token: string,
-  amount: number,
-  billingData: any,
-  orderId: number,
-): Promise<string> {
-  const { data }: AxiosResponse<any> = await firstValueFrom(
-    this.http.post(
-      'https://accept.paymob.com/api/acceptance/payment_keys',
-      {
+    token: string,
+    amount: number,
+    billingData: any,
+    orderId: number,
+  ): Promise<string> {
+    this.logger.log(`🔑 Generating Payment Key for Order ID: ${orderId}`);
+    const { data }: AxiosResponse<any> = await firstValueFrom(
+      this.http.post('https://accept.paymob.com/api/acceptance/payment_keys', {
         auth_token: token,
         amount_cents: amount,
         expiration: 3600,
@@ -81,7 +102,7 @@ export class PaymentService {
           apartment: billingData.apartment || 'NA',
           email: billingData.email,
           floor: billingData.floor || 'NA',
-          building: billingData.building || 'NA', // ✅ REQUIRED by Paymob
+          building: billingData.building || 'NA',
           first_name: billingData.first_name,
           last_name: billingData.last_name,
           phone_number: billingData.phone_number,
@@ -94,9 +115,8 @@ export class PaymentService {
         },
         currency: 'EGP',
         integration_id: Number(this.integrationId),
-      },
-      { timeout: 10000 },
-    ),
-  );
-  return data.token;
-}}
+      }),
+    );
+    return data.token;
+  }
+}
