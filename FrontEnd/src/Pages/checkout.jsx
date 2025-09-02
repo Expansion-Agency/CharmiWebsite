@@ -149,35 +149,13 @@ export default function Checkout() {
       alert(`${translations.nodefadd}`);
       return;
     }
-
-    try {
-      const token = localStorage.getItem("token");
-      const orderData = {
-        total: totalPrice,
-        addressId: defaultAddress.Addresses.id,
-        orderItems: cart.map((item) => ({
-          productId: item.productId,
-          quantity: item.quantity,
-          priceEgp: parseInt(item.priceEgp, 10),
-          priceUsd: parseInt(item.priceusd, 10),
-        })),
-      };
-
-      await axios.post(`${API_BASE_URL}/orders`, orderData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      alert(translations.successOrder);
-      localStorage.removeItem("cart");
-      navigate("/order-success", { state: { cart: [], totalPrice: 0 } });
-    } catch (error) {
-      console.error("Error placing order:", error.response?.data || error);
-      alert(
-        `Failed to place order: ${
-          error.response?.data?.message || "Unknown error"
-        }`
-      );
-    }
+    navigate("/payment", {
+      state: {
+        cart,
+        totalPrice,
+        address: defaultAddress,
+      },
+    });
   };
 
   return (

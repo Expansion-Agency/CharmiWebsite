@@ -15,7 +15,6 @@ function ResetPass() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
   // Extract email or token from URL query (backend should provide a token in the email link)
   const queryParams = new URLSearchParams(location.search);
   const email = queryParams.get("email");
