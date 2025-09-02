@@ -278,7 +278,6 @@ function App() {
               }
             />
             <Route path="*" element={<Navigate to="/" replace />} />
-            <Route path="/payment" element={<PaymentPage />} />
           </Routes>
 
           {/* Conditionally render Cart only when products are loaded */}

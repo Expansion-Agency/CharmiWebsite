@@ -19,6 +19,7 @@ export default function Checkout() {
   const [cityName, setCityName] = useState("");
   const [districtName, setDistrictName] = useState("");
   const { selectedCurrency, convertAmount } = useCurrency();
+  const [paymentUrl, setPaymentUrl] = useState("");
   const [locationNames, setLocationNames] = useState({
     country: "",
     city: "",
@@ -149,13 +150,40 @@ export default function Checkout() {
       alert(`${translations.nodefadd}`);
       return;
     }
-    navigate("/payment", {
-      state: {
-        cart,
-        totalPrice,
-        address: defaultAddress,
-      },
-    });
+    try {
+      const response = await fetch(`${API_BASE_URL}/payment/initiate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: totalPrice,
+          billing: {
+            first_name: defaultAddress.fullName?.split(" ")[0] || "NA",
+            last_name: defaultAddress.fullName?.split(" ")[1] || "NA",
+            email: defaultAddress.email,
+            phone_number: defaultAddress.phoneNumber,
+            apartment: defaultAddress.Addresses.apartmentNumber || "NA",
+            floor: "NA",
+            building: defaultAddress.Addresses.buildingNumber || "NA",
+            street: defaultAddress.Addresses.streetName,
+            city: locationNames.city,
+            state: locationNames.district,
+            postal_code: "NA",
+            country: "EG",
+            shipping_method: "PKG",
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Payment initiation failed");
+      }
+
+      const data = await response.json();
+      setPaymentUrl(data.paymentPageUrl);
+    } catch (error) {
+      console.error("Payment initiation failed:", error);
+      alert("Failed to initiate payment");
+    }
   };
 
   return (
@@ -359,6 +387,20 @@ export default function Checkout() {
               </span>
             </div>
           </div>
+          {paymentUrl && (
+            <div className="mt-5">
+              <h4>{translations.pay}</h4>
+              <iframe
+                src={paymentUrl}
+                width="100%"
+                height="600"
+                frameBorder="0"
+                allowFullScreen
+                title="Payment"
+                className="border rounded"
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
