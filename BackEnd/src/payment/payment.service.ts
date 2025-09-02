@@ -50,10 +50,20 @@ export class PaymentService {
 
       return paymentToken;
     } catch (error) {
-      this.logger.error(
-        '❌ Payment creation failed',
-        error?.response?.data || error.message,
-      );
+      this.logger.error('❌ Payment creation failed');
+      if (error.response) {
+        // 🔎 Log full error details
+        this.logger.error(
+          `Paymob API Error (status ${error.response.status}): ${JSON.stringify(
+            error.response.data,
+            null,
+            2,
+          )}`,
+        );
+      } else {
+        this.logger.error(`Unexpected Error: ${error.message}`);
+      }
+
       throw new InternalServerErrorException('Failed to initiate payment');
     }
   }
@@ -91,32 +101,41 @@ export class PaymentService {
     billingData: any,
     orderId: number,
   ): Promise<string> {
-    this.logger.log(`🔑 Generating Payment Key for Order ID: ${orderId}`);
-    const { data }: AxiosResponse<any> = await firstValueFrom(
-      this.http.post('https://accept.paymob.com/api/acceptance/payment_keys', {
-        auth_token: token,
-        amount_cents: amount,
-        expiration: 3600,
-        order_id: orderId,
-        billing_data: {
-          apartment: billingData.apartment || 'NA',
-          email: billingData.email,
-          floor: billingData.floor || 'NA',
-          building: billingData.building || 'NA',
-          first_name: billingData.first_name,
-          last_name: billingData.last_name,
-          phone_number: billingData.phone_number,
-          shipping_method: billingData.shipping_method || 'PKG',
-          postal_code: billingData.postal_code || 'NA',
-          city: billingData.city,
-          country: billingData.country || 'EG',
-          state: billingData.state,
-          street: billingData.street,
-        },
-        currency: 'EGP',
-        integration_id: Number(this.integrationId),
-      }),
+    const payload = {
+      auth_token: token,
+      amount_cents: amount,
+      expiration: 3600,
+      order_id: orderId,
+      billing_data: {
+        apartment: billingData.apartment || 'NA',
+        email: billingData.email,
+        floor: billingData.floor || 'NA',
+        building: billingData.building || 'NA',
+        first_name: billingData.first_name,
+        last_name: billingData.last_name,
+        phone_number: billingData.phone_number,
+        shipping_method: billingData.shipping_method || 'PKG',
+        postal_code: billingData.postal_code || 'NA',
+        city: billingData.city,
+        country: billingData.country || 'EG',
+        state: billingData.state,
+        street: billingData.street,
+      },
+      currency: 'EGP',
+      integration_id: Number(this.integrationId),
+    };
+
+    this.logger.debug(
+      `📤 Sending payload to Paymob:\n${JSON.stringify(payload, null, 2)}`,
     );
+
+    const { data }: AxiosResponse<any> = await firstValueFrom(
+      this.http.post(
+        'https://accept.paymob.com/api/acceptance/payment_keys',
+        payload,
+      ),
+    );
+
     return data.token;
   }
 }
