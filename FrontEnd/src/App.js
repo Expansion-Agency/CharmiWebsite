@@ -33,6 +33,7 @@ import ResetPass from "./Pages/ResetPass";
 import DshCities from "./Dashboard/DshCities";
 import DshCountries from "./Dashboard/DshCountries";
 import DshCategories from "./Dashboard/DshCategories";
+import PaymentPage from "./Pages/PaymentPage";
 import axios from "axios";
 import AdminPage from "./Dashboard/admins";
 import ShippingFees from "./Dashboard/ShippingFees";
@@ -277,8 +278,12 @@ function App() {
               }
             />
             <Route path="*" element={<Navigate to="/" replace />} />
+            <Route
+            path="/paymentPage"
+            element={
+              <PaymentPage price={100}/>}/>
           </Routes>
-
+            
           {/* Conditionally render Cart only when products are loaded */}
           {!isLoading && (
             <Cart
@@ -294,6 +299,7 @@ function App() {
         </TranslationProvider>
       </CurrencyProvider>
     </PriceVisibilityProvider>
-  );
+  )
+    ;
 }
 export default App;

@@ -105,9 +105,13 @@ function Dshproducts() {
           nameAr: newProduct.nameAr,
           descriptionEn: newProduct.descriptionEn,
           descriptionAr: newProduct.descriptionAr,
-          priceEgp: newProduct.priceEgp,
-          priceUsd: newProduct.priceUsd,
-          quantity: newProduct.quantity,
+          priceEgp: newProduct.priceEgp
+            ? parseFloat(newProduct.priceEgp)
+            : null,
+          priceUsd: newProduct.priceUsd
+            ? parseFloat(newProduct.priceUsd)
+            : null,
+          quantity: newProduct.quantity ? parseInt(newProduct.quantity) : 0,
           categoryId: newProduct.categoryId,
           discountId: newProduct.discountId
             ? parseInt(newProduct.discountId)

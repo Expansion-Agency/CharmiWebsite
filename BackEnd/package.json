@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^2.0.2",
+    "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.0",
     "@nestjs/core": "^11.0.1",
@@ -29,6 +30,9 @@
     "@nestjs/swagger": "^11.0.3",
     "@nestjs/throttler": "^6.4.0",
     "@prisma/client": "^6.5.0",
+    "@rytass/payments": "^0.2.3",
+    "@rytass/payments-adapter-ecpay": "^0.4.4",
+    "@rytass/payments-nestjs-module": "^0.1.10",
     "@types/bcrypt": "^5.0.2",
     "bcrypt": "^5.1.1",
     "crypto": "^1.0.1",
