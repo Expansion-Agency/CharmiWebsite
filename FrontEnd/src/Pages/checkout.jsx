@@ -156,7 +156,7 @@ export default function Checkout() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           amount: totalPrice,
-          billing: {
+          ...{
             first_name: defaultAddress.fullName?.split(" ")[0] || "NA",
             last_name: defaultAddress.fullName?.split(" ")[1] || "NA",
             email: defaultAddress.email,
