@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-export default function PaymentPage({ price }) {
+export default function PaymentPage() {
   const API_BASE_URL = process.env.REACT_APP_API_URL;
   const location = useLocation();
   const navigate = useNavigate();

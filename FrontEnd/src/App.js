@@ -278,12 +278,9 @@ function App() {
               }
             />
             <Route path="*" element={<Navigate to="/" replace />} />
-            <Route
-            path="/paymentPage"
-            element={
-              <PaymentPage price={100}/>}/>
+            <Route path="/payment" element={<PaymentPage />} />
           </Routes>
-            
+
           {/* Conditionally render Cart only when products are loaded */}
           {!isLoading && (
             <Cart
@@ -299,7 +296,6 @@ function App() {
         </TranslationProvider>
       </CurrencyProvider>
     </PriceVisibilityProvider>
-  )
-    ;
+  );
 }
 export default App;
