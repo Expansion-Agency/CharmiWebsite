@@ -146,10 +146,10 @@ export default function Checkout() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!defaultAddress) {
-      alert(`${translations.nodefadd}`);
-      return;
-    }
+    // if (!defaultAddress) {
+    //   alert(`${translations.nodefadd}`);
+    //   return;
+    // }
     try {
       const response = await fetch(`${API_BASE_URL}/payment/initiate`, {
         method: "POST",
