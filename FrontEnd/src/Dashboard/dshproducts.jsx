@@ -38,6 +38,7 @@ function Dshproducts() {
     priceUsd: "",
     quantity: "",
     discountId: "",
+    imageFile: null,
   });
 
   const OpenSidebar = () => {
@@ -247,6 +248,20 @@ function Dshproducts() {
           },
         }
       );
+
+      if (updatedProduct.imageFile) {
+        const imageFormData = new FormData();
+        imageFormData.append("imageFile", updatedProduct.imageFile);
+        imageFormData.append("isDefault", true);
+        imageFormData.append("productId", editingProduct.id);
+
+        await axios.post(`${API_BASE_URL}/product-images`, imageFormData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      }
 
       setEditingProduct(null);
       fetchProducts();
