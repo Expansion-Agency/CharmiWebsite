@@ -43,7 +43,7 @@ export default function Checkout() {
 
   const fetchLocationName = async (id, type) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/${type}/${id}`);
+      const response = await axios.get(`https://api.charmi.shop/${type}/${id}`);
       if (type === "district") {
         return response.data.districtName;
       }
